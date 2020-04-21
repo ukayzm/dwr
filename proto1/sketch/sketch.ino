@@ -1,10 +1,9 @@
+#include "board.h"
+
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
+    setup_board();
 }
 
 void loop() {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(500);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(500);
+    loop_board();
 }

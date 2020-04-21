@@ -29,13 +29,11 @@
 
 
 /* loop interval (msec) */
-#define LOOP_MS     6
-#define INTERVAL_BALANCING	LOOP_MS
+#define LOOP_USEC     6000
 
 
 extern void setup_board(void);
-extern void setDivisorTimer1(int divisor);
-extern uint16_t getPwmFrequencyTimer1(void);
+extern void loop_board(void);
 
 
 #endif // __BOARD_H__
