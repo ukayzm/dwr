@@ -29,7 +29,7 @@
 
 
 /* loop interval (msec) */
-#define LOOP_USEC     6000
+#define LOOP_USEC     1000
 
 
 extern void setup_board(void);

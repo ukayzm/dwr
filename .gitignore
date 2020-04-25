@@ -32,3 +32,6 @@
 *.app
 *.hex
 *.elf
+
+# vim
+.*.swp
