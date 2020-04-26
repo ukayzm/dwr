@@ -3,7 +3,7 @@
 
 
 extern void setup_mpu6050_dmp6(void);
-extern int loop_mpu6050_dmp6(uint32_t cur_msec);
+extern int loop_mpu6050_dmp6(uint32_t cur_usec);
 extern float euler[3];         // [psi, theta, phi]    Euler angle container
 extern float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 

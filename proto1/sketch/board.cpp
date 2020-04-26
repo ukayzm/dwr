@@ -10,10 +10,12 @@
 
 DcMotor motorLeft(PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A);
 DcMotor motorRight(PIN_PWM_B, PIN_DIR1_MOTOR_B, PIN_DIR2_MOTOR_B);
-Encoder encoderLeft(PIN_ENCODER_INTR_A, PIN_ENCODER_DIR_A);
-Encoder encoderRight(PIN_ENCODER_INTR_B, PIN_ENCODER_DIR_B);
+Encoder encoderLeft(PIN_ENCODER_INTR_A, PIN_ENCODER_DIR_A, ENCODER_INTR_PER_REVOLUTION);
+Encoder encoderRight(PIN_ENCODER_INTR_B, PIN_ENCODER_DIR_B, ENCODER_INTR_PER_REVOLUTION);
+
 
 unsigned long prev_msec;
+Mode mode;
 
 void setup_board()
 {
@@ -25,11 +27,17 @@ void setup_board()
 	setDivisorTimer1(1);
 
 	setup_mpu6050_dmp6();
+	setup_status_led();
 	setup_ir();
 
-	prev_msec = millis();
-}
+	motorLeft.attachEncoder(&encoderLeft);
+	motorLeft.enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
+	motorRight.attachEncoder(&encoderRight);
+	motorRight.enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
 
+	prev_msec = millis();
+	mode = 0;
+}
 
 void loop_board()
 {
@@ -40,10 +48,8 @@ void loop_board()
 	}
 	prev_msec = cur_msec;
 
-	if (loop_mpu6050_dmp6(cur_msec) == 0) {
-		// succeed to read angle
-	}
-	loop_status_led(cur_msec);
-	loop_ir(cur_msec);
+	//loop_mpu6050_dmp6(cur_msec);
+	loop_status_led();
+	//loop_ir();
 }
 

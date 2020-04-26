@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "DcMotor.h"
+#include "pid.h"
 
 
 DcMotor::DcMotor(int pinPwm, int pinDirA, int pinDirB)
@@ -23,6 +24,8 @@ DcMotor::DcMotor(int pinPwm, int pinDirA, int pinDirB)
 void DcMotor::attachEncoder(Encoder *encoder)
 {
 	pEncoder = encoder;
+    pEncoder->resetCount();
+    prev_usec = micros();
 }
 
 void DcMotor::setPwm(int16_t pwm)
@@ -50,21 +53,51 @@ void DcMotor::setPwm(int16_t pwm)
 	analogWrite(nPinPwm, pwm);
 }
 
+void DcMotor::enablePid(double Kp, double Ki, double Kd)
+{
+	pid = new Pid(Kp, Ki, Kd);
+}
+
 int16_t DcMotor::getPwm(void)
 {
 	return nCurPwm;
 }
 
-void Motor::setRpm(int16_t rpm)
+void DcMotor::setRpm(int16_t rpm)
 {
-	nCurRpm = rpm;
+	nTgtRpm = rpm;
 }
 
-int16_t Motor::getRpm(void)
+int16_t DcMotor::getCurRpm(void)
 {
 	return nCurRpm;
 }
 
-void Motor::loop(uint32_t cur_msec)
+void DcMotor::loop(void)
 {
+	unsigned long cur_usec = micros();
+    if (pEncoder) {
+		nCurRpm = getCurRpmFromEncoder(cur_usec);
+    }
+	if (pid) {
+		setPwmByPid();
+	}
+	prev_usec = cur_usec;
 }
+
+int16_t DcMotor::getCurRpmFromEncoder(unsigned long cur_usec)
+{
+    int16_t count = pEncoder->getCountAndReset();
+	int dt = cur_usec - prev_usec;
+	if (dt <= 0) {
+		return nCurRpm;
+	}
+	return (double)(count * 60) / pEncoder->getIntrPerRevolution() * 1000000 / dt;
+}
+
+void DcMotor::setPwmByPid(void)
+{
+	int pwm = pid->compute(nCurRpm, nTgtRpm);
+	setPwm(pwm);
+}
+

@@ -18,7 +18,7 @@ uint32_t recv_ir()
     return results.value;
 }
 
-void loop_ir(unsigned long cur_msec)
+void loop_ir()
 {
     uint32_t ir_code;
     static uint32_t last_ir_code;

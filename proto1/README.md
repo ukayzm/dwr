@@ -14,13 +14,18 @@ parts
 
 sketch/ - arduino source code
 required library:
-* I2Cdev, MPU6050 from https://github.com/jrowberg/i2cdevlib.
-* IRremove
+* I2Cdev, MPU6050 from https://github.com/jrowberg/i2cdevlib
+* IRremove from https://github.com/shirriff/Arduino-IRremote.git
 
 compile
 ```bash
 $ cd dwr/proto1
 $ arduino-cli compile --fqbn arduino:avr:uno sketch/                        # for Arduino Uno board
 $ arduino-cli compile --fqbn arduino:avr:nano:cpu=atmega328old sketch/      # for Arduino Nano with ATmega328P (Old Bootloader)
+```
+
+upload
+```bash
+$ arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno sketch/
 ```
 

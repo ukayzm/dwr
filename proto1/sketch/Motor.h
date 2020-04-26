@@ -9,8 +9,9 @@ class Motor
 {
 public:
 	virtual void setRpm(int16_t rpm);
-	virtual int16_t getRpm(void);
-	virtual void loop(uint32_t cur_msec);
+	virtual int16_t getCurRpm(void);
+	virtual void loop(void);
+protected:
 	int16_t nCurRpm;
 };
 

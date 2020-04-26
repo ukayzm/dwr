@@ -164,7 +164,7 @@ void setup_mpu6050_dmp6() {
 // ===                    MAIN PROGRAM LOOP                     ===
 // ================================================================
 
-int loop_mpu6050_dmp6(uint32_t cur_msec) {
+int loop_mpu6050_dmp6(uint32_t cur_usec) {
     // if programming failed, don't try to do anything
     if (!dmpReady) {
 		return -1;

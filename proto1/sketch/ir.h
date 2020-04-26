@@ -3,7 +3,7 @@
 
 
 extern void setup_ir(void);
-extern void loop_ir(unsigned long cur_msec);
+extern void loop_ir(void);
 
 
 #endif // __IR_H__

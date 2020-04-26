@@ -16,6 +16,9 @@
 #define PIN_ENCODER_DIR_A		4
 #define PIN_ENCODER_DIR_B		5
 
+#define ENCODER_INTR_PER_REVOLUTION		660		/* 660 intr per revolution */
+
+
 /* motor */
 #define PIN_PWM_A				9
 #define PIN_PWM_B				10
@@ -24,8 +27,17 @@
 #define PIN_DIR1_MOTOR_B		7
 #define PIN_DIR2_MOTOR_B		8
 
+#define MOTOR_KP				10
+#define MOTOR_KI				1
+#define MOTOR_KD				1
+
+
 /* Infre Red */
 #define IR_PIN			A3
+
+
+/* status LED */
+#define STATUS_LED_PIN			LED_BUILTIN
 
 
 /* loop interval (msec) */
@@ -34,6 +46,14 @@
 
 extern void setup_board(void);
 extern void loop_board(void);
+
+
+/* operation mode */
+enum Mode {
+	MODE_READY,
+	MODE_MAX,
+};
+extern Mode mode;
 
 
 #endif // __BOARD_H__

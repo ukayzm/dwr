@@ -26,7 +26,7 @@ static void isr1(void)
 	ulTotalCount[1]++;
 }
 
-Encoder::Encoder(int pin_intr, int pin_dir)
+Encoder::Encoder(int pin_intr, int pin_dir, int intr_per_rev)
 {
 	void (*isr)(void);
 	id = numEncoder++;
@@ -43,10 +43,14 @@ Encoder::Encoder(int pin_intr, int pin_dir)
 	pinMode(pin_intr, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(pin_intr), isr, FALLING);
 	pinMode(pin_dir, INPUT_PULLUP);
+	intrPerRevolution = intr_per_rev;
+
 	Serial.print("Encoder PIN_INTR = ");
 	Serial.print(pin_intr);
 	Serial.print(", PIN_DIR = ");
 	Serial.print(pin_dir);
+	Serial.print(", intr_per_rev = ");
+	Serial.print(intr_per_rev);
 	Serial.println();
 }
 
@@ -55,8 +59,15 @@ void Encoder::resetCount(void)
 	nCount[id] = 0;
 }
 
-int16_t Encoder::getCount(void)
+int16_t Encoder::getCountAndReset(void)
 {
-	return nCount[id];
+	int16_t count = nCount[id];
+	nCount[id] = 0;
+	return count;
+}
+
+int16_t Encoder::getIntrPerRevolution(void)
+{
+	return intrPerRevolution;
 }
 
