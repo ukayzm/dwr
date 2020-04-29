@@ -1,5 +1,7 @@
 #include <IRremote.h>
 #include "board.h"
+#include "test_motor.h"
+
 
 IRrecv irrecv(IR_PIN);
 
@@ -67,14 +69,18 @@ void loop_ir()
         Serial.println("STOP");
     } else if (ir_code == 0x7547960e) {
         Serial.println("NEXT");
+		start_test_motor_speed(&leftMotor);
     } else if (ir_code == 0xd1921028) {
         Serial.println("PREV");
+		start_test_motor_speed(&rightMotor);
     } else if (ir_code == 0x26ecbcf3) {
         Serial.println("(0)");
     } else if (ir_code == 0x9004b206) {
         Serial.println("(1)");
+		start_test_motor_dir(&leftMotor);
     } else if (ir_code == 0xc35f14b9) {
         Serial.println("(2)");
+		start_test_motor_dir(&rightMotor);
     } else if (ir_code == 0x6bef8366) {
         Serial.println("PWR");
     } else if (ir_code == 0xbe663d0a) {

@@ -1,9 +1,9 @@
 #include "Arduino.h"
-#include "DcMotor.h"
+#include "dcmotor.h"
 #include "pid.h"
 
 
-DcMotor::DcMotor(int pinPwm, int pinDirA, int pinDirB)
+DcMotor::DcMotor(int pinPwm, int pinDirA, int pinDirB, int16_t max_rpm)
 {
 	nPinPwm = pinPwm;
 	nPinDirA = pinDirA;
@@ -11,6 +11,7 @@ DcMotor::DcMotor(int pinPwm, int pinDirA, int pinDirB)
 	pinMode(nPinPwm, OUTPUT);
 	pinMode(nPinDirA, OUTPUT);
 	pinMode(nPinDirB, OUTPUT);
+	maxRpm = max_rpm;
 
 	Serial.print("DcMotor PIN_PWM = ");
 	Serial.print(pinPwm);
@@ -18,6 +19,8 @@ DcMotor::DcMotor(int pinPwm, int pinDirA, int pinDirB)
 	Serial.print(pinDirA);
 	Serial.print(", PIN_DIR_B = ");
 	Serial.print(pinDirB);
+	Serial.print(", maxRpm = ");
+	Serial.print(maxRpm);
 	Serial.println();
 }
 
@@ -68,16 +71,11 @@ void DcMotor::setRpm(int16_t rpm)
 	nTgtRpm = rpm;
 }
 
-int16_t DcMotor::getCurRpm(void)
-{
-	return nCurRpm;
-}
-
 void DcMotor::loop(void)
 {
 	unsigned long cur_usec = micros();
     if (pEncoder) {
-		nCurRpm = getCurRpmFromEncoder(cur_usec);
+		curRpm = getCurRpmFromEncoder(cur_usec);
     }
 	if (pid) {
 		setPwmByPid();
@@ -90,14 +88,14 @@ int16_t DcMotor::getCurRpmFromEncoder(unsigned long cur_usec)
     int16_t count = pEncoder->getCountAndReset();
 	int dt = cur_usec - prev_usec;
 	if (dt <= 0) {
-		return nCurRpm;
+		return curRpm;
 	}
 	return (double)(count * 60) / pEncoder->getIntrPerRevolution() * 1000000 / dt;
 }
 
 void DcMotor::setPwmByPid(void)
 {
-	int pwm = pid->compute(nCurRpm, nTgtRpm);
+	int pwm = pid->compute(curRpm, nTgtRpm);
 	setPwm(pwm);
 }
 

@@ -3,15 +3,15 @@
 
 
 #include <inttypes.h>
-#include "Motor.h"
-#include "Encoder.h"
+#include "motor.h"
+#include "encoder.h"
 #include "pid.h"
 
 
 class DcMotor : public Motor
 {
 public:
-	DcMotor(int pinPwm, int pinDirA, int pinDirB);
+	DcMotor(int pinPwm, int pinDirA, int pinDirB, int16_t max_rpm);
 	void setPwm(int16_t pwm);			/* PWM -255 ~ +255 */
 	int16_t getPwm(void);
 	void attachEncoder(Encoder *encoder);

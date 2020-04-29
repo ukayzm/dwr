@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "Encoder.h"
+#include "encoder.h"
 
 
 static int pinDir[NUM_ENCODER];

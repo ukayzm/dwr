@@ -9,10 +9,16 @@ class Motor
 {
 public:
 	virtual void setRpm(int16_t rpm);
-	virtual int16_t getCurRpm(void);
+	int16_t getCurRpm(void) {
+		return curRpm;
+	}
+	int16_t getMaxRpm(void) {
+		return maxRpm;
+	}
 	virtual void loop(void);
 protected:
-	int16_t nCurRpm;
+	int16_t maxRpm;
+	int16_t curRpm;
 };
 
 

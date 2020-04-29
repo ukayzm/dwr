@@ -2,6 +2,7 @@
 #define __BOARD_H__
 
 #include <inttypes.h>
+#include "motor.h"
 
 
 /*
@@ -44,16 +45,24 @@
 #define LOOP_USEC     1000
 
 
-extern void setup_board(void);
-extern void loop_board(void);
-
-
 /* operation mode */
 enum Mode {
 	MODE_READY,
+	MODE_TEST_MOTOR_DIR,
+	MODE_TEST_MOTOR_SPEED,
 	MODE_MAX,
 };
 extern Mode mode;
+
+extern unsigned long cur_msec;
+extern unsigned long cur_usec;
+
+extern Motor leftMotor;
+extern Motor rightMotor;
+
+
+extern void setup_board(void);
+extern void loop_board(void);
 
 
 #endif // __BOARD_H__

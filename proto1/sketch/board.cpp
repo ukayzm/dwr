@@ -1,20 +1,23 @@
 #include "Arduino.h"
 #include "board.h"
-#include "DcMotor.h"
-#include "Encoder.h"
+#include "dcmotor.h"
+#include "encoder.h"
 #include "pwm.h"
 #include "mpu6050_dmp6.h"
 #include "status_led.h"
 #include "ir.h"
+#include "test_motor.h"
 
 
-DcMotor motorLeft(PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A);
-DcMotor motorRight(PIN_PWM_B, PIN_DIR1_MOTOR_B, PIN_DIR2_MOTOR_B);
+DcMotor motorLeft(PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A, 300);
+DcMotor motorRight(PIN_PWM_B, PIN_DIR1_MOTOR_B, PIN_DIR2_MOTOR_B, 300);
 Encoder encoderLeft(PIN_ENCODER_INTR_A, PIN_ENCODER_DIR_A, ENCODER_INTR_PER_REVOLUTION);
 Encoder encoderRight(PIN_ENCODER_INTR_B, PIN_ENCODER_DIR_B, ENCODER_INTR_PER_REVOLUTION);
 
 
 unsigned long prev_msec;
+unsigned long cur_msec;
+unsigned long cur_usec;
 Mode mode;
 
 void setup_board()
@@ -41,15 +44,18 @@ void setup_board()
 
 void loop_board()
 {
-	unsigned long cur_msec = millis();
-	unsigned long cur_usec = micros();
+	cur_msec = millis();
+	cur_usec = micros();
 	if (cur_msec == prev_msec) {
 		return;
 	}
 	prev_msec = cur_msec;
 
-	//loop_mpu6050_dmp6(cur_msec);
+	loop_mpu6050_dmp6();
+	loop_ir();
+	if (mode != MODE_READY) {
+		test_loop();
+	}
 	loop_status_led();
-	//loop_ir();
 }
 
