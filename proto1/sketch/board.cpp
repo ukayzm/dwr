@@ -56,6 +56,9 @@ void loop_board()
 	if (mode != MODE_READY) {
 		test_loop();
 	}
+
+	motorLeft.loop();
+	motorRight.loop();
 	loop_status_led();
 }
 

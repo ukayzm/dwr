@@ -3,7 +3,7 @@
 #include "status_led.h"
 
 
-#define MAX_PHASE	2
+#define MAX_PHASE	4
 
 static int phase;
 static unsigned long last_change_msec;
@@ -13,6 +13,7 @@ static char ledOnOffTime[MODE_MAX][MAX_PHASE] = {
 	{10, 10},
 	{5, 10},
 	{1, 9},
+	{1, 1, 1, 7},
 };
 
 void setup_status_led() {

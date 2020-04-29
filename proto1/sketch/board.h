@@ -2,7 +2,7 @@
 #define __BOARD_H__
 
 #include <inttypes.h>
-#include "motor.h"
+#include "dcmotor.h"
 
 
 /*
@@ -49,7 +49,8 @@
 enum Mode {
 	MODE_READY,
 	MODE_TEST_MOTOR_DIR,
-	MODE_TEST_MOTOR_SPEED,
+	MODE_TEST_MOTOR_PWM,
+	MODE_TEST_MOTOR_RPM,
 	MODE_MAX,
 };
 extern Mode mode;
@@ -57,8 +58,8 @@ extern Mode mode;
 extern unsigned long cur_msec;
 extern unsigned long cur_usec;
 
-extern Motor leftMotor;
-extern Motor rightMotor;
+extern DcMotor leftMotor;
+extern DcMotor rightMotor;
 
 
 extern void setup_board(void);

@@ -49,7 +49,7 @@ void DcMotor::setPwm(int16_t pwm)
 		digitalWrite(nPinDirA, LOW);
 		digitalWrite(nPinDirB, LOW);
 	}
-	nCurPwm = pwm;
+	curPwm = pwm;
 	if (pwm < 0) {
 		pwm = -pwm;
 	}
@@ -63,12 +63,12 @@ void DcMotor::enablePid(double Kp, double Ki, double Kd)
 
 int16_t DcMotor::getPwm(void)
 {
-	return nCurPwm;
+	return curPwm;
 }
 
 void DcMotor::setRpm(int16_t rpm)
 {
-	nTgtRpm = rpm;
+	tgtRpm = rpm;
 }
 
 void DcMotor::loop(void)
@@ -95,7 +95,7 @@ int16_t DcMotor::getCurRpmFromEncoder(unsigned long cur_usec)
 
 void DcMotor::setPwmByPid(void)
 {
-	int pwm = pid->compute(curRpm, nTgtRpm);
+	int pwm = pid->compute(curRpm, tgtRpm);
 	setPwm(pwm);
 }
 

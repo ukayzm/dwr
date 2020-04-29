@@ -21,8 +21,8 @@ public:
 	void loop(void);
 private:
 	int nPinPwm, nPinDirA, nPinDirB;
-	int16_t nCurPwm;
-    int16_t nTgtRpm;
+	int16_t curPwm;
+    int16_t tgtRpm;
 	Encoder *pEncoder;
     Pid *pid;
     double fInRpm, fTgtRpm, fTgtPwm;
