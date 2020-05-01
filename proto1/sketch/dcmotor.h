@@ -11,16 +11,18 @@
 class DcMotor : public Motor
 {
 public:
-	DcMotor(int pinPwm, int pinDirA, int pinDirB, int16_t max_rpm);
+	DcMotor(int _id, int pin_pwm, int pin_dirA, int pin_dirB, int16_t max_rpm);
 	void setPwm(int16_t pwm);			/* PWM -255 ~ +255 */
 	int16_t getPwm(void);
 	void attachEncoder(Encoder *encoder);
 	void enablePid(double Kp, double Ki, double Kd);
 	void setRpm(int16_t rpm);
-	int16_t getCurRpm(void);
 	void loop(void);
+	void incKp(float delta);
+	void incKi(float delta);
+	void incKd(float delta);
 private:
-	int nPinPwm, nPinDirA, nPinDirB;
+	int pinPwm, pinDirA, pinDirB;
 	int16_t curPwm;
     int16_t tgtRpm;
 	Encoder *pEncoder;

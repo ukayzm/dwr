@@ -9,16 +9,16 @@
 #include "test_motor.h"
 
 
-DcMotor motorLeft(PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A, 300);
-DcMotor motorRight(PIN_PWM_B, PIN_DIR1_MOTOR_B, PIN_DIR2_MOTOR_B, 300);
-Encoder encoderLeft(PIN_ENCODER_INTR_A, PIN_ENCODER_DIR_A, ENCODER_INTR_PER_REVOLUTION);
-Encoder encoderRight(PIN_ENCODER_INTR_B, PIN_ENCODER_DIR_B, ENCODER_INTR_PER_REVOLUTION);
+DcMotor *motor0, *motor1;
 
 
 unsigned long prev_msec;
 unsigned long cur_msec;
 unsigned long cur_usec;
 Mode mode;
+
+char strbuf[256];
+
 
 void setup_board()
 {
@@ -33,15 +33,19 @@ void setup_board()
 	setup_status_led();
 	setup_ir();
 
-	motorLeft.attachEncoder(&encoderLeft);
-	motorLeft.enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
-	motorRight.attachEncoder(&encoderRight);
-	motorRight.enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
+	motor0 = new DcMotor(0, 300, PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A);
+	motor0->attachEncoder(new Encoder(PIN_ENCODER_INTR_A, PIN_ENCODER_DIR_A, ENCODER_INTR_PER_REVOLUTION));
+	motor0->enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
+
+	motor1 = new DcMotor(1, 300, PIN_PWM_B, PIN_DIR1_MOTOR_B, PIN_DIR2_MOTOR_B);
+	motor1->attachEncoder(new Encoder(PIN_ENCODER_INTR_B, PIN_ENCODER_DIR_B, ENCODER_INTR_PER_REVOLUTION));
+	motor1->enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
 
 	prev_msec = millis();
 	mode = 0;
 }
 
+int first = 0;
 void loop_board()
 {
 	cur_msec = millis();
@@ -57,8 +61,11 @@ void loop_board()
 		test_loop();
 	}
 
-	motorLeft.loop();
-	motorRight.loop();
+	motor0->loop();
+	motor1->loop();
 	loop_status_led();
+	if (mode != MODE_READY) {
+		print_motor_rpm();
+	}
 }
 

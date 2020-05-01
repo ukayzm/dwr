@@ -51,15 +51,17 @@ enum Mode {
 	MODE_TEST_MOTOR_DIR,
 	MODE_TEST_MOTOR_PWM,
 	MODE_TEST_MOTOR_RPM,
+	MODE_TEST_MOTOR_RPM_SINGLE,
 	MODE_MAX,
 };
 extern Mode mode;
 
 extern unsigned long cur_msec;
 extern unsigned long cur_usec;
+extern char strbuf[256];
 
-extern DcMotor leftMotor;
-extern DcMotor rightMotor;
+
+extern DcMotor *motor0, *motor1;
 
 
 extern void setup_board(void);

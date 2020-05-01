@@ -3,24 +3,27 @@
 #include "pid.h"
 
 
-DcMotor::DcMotor(int pinPwm, int pinDirA, int pinDirB, int16_t max_rpm)
+DcMotor::DcMotor(int _id, int16_t max_rpm, int pin_pwm, int pin_dirA, int pin_dirB)
 {
-	nPinPwm = pinPwm;
-	nPinDirA = pinDirA;
-	nPinDirB = pinDirB;
-	pinMode(nPinPwm, OUTPUT);
-	pinMode(nPinDirA, OUTPUT);
-	pinMode(nPinDirB, OUTPUT);
+	id = _id;
+	pinPwm = pin_pwm;
+	pinDirA = pin_dirA;
+	pinDirB = pin_dirB;
+	pinMode(pinPwm, OUTPUT);
+	pinMode(pinDirA, OUTPUT);
+	pinMode(pinDirB, OUTPUT);
 	maxRpm = max_rpm;
 
-	Serial.print("DcMotor PIN_PWM = ");
-	Serial.print(pinPwm);
-	Serial.print(", PIN_DIR_A = ");
-	Serial.print(pinDirA);
-	Serial.print(", PIN_DIR_B = ");
-	Serial.print(pinDirB);
-	Serial.print(", maxRpm = ");
+	Serial.print("DcMotor");
+	Serial.print(id);
+	Serial.print(", maxRpm=");
 	Serial.print(maxRpm);
+	Serial.print(", PIN pwm=");
+	Serial.print(pinPwm);
+	Serial.print(", dirA=");
+	Serial.print(pinDirA);
+	Serial.print(", dirB=");
+	Serial.print(pinDirB);
 	Serial.println();
 }
 
@@ -40,20 +43,20 @@ void DcMotor::setPwm(int16_t pwm)
 
 	/* dumb speed up */
 	if (pwm > 0) {
-		digitalWrite(nPinDirA, LOW);
-		digitalWrite(nPinDirB, HIGH);
+		digitalWrite(pinDirA, LOW);
+		digitalWrite(pinDirB, HIGH);
 	} else if (pwm < 0) {
-		digitalWrite(nPinDirB, LOW);
-		digitalWrite(nPinDirA, HIGH);
+		digitalWrite(pinDirB, LOW);
+		digitalWrite(pinDirA, HIGH);
 	} else {
-		digitalWrite(nPinDirA, LOW);
-		digitalWrite(nPinDirB, LOW);
+		digitalWrite(pinDirA, LOW);
+		digitalWrite(pinDirB, LOW);
 	}
 	curPwm = pwm;
 	if (pwm < 0) {
 		pwm = -pwm;
 	}
-	analogWrite(nPinPwm, pwm);
+	analogWrite(pinPwm, pwm);
 }
 
 void DcMotor::enablePid(double Kp, double Ki, double Kd)
@@ -74,6 +77,7 @@ void DcMotor::setRpm(int16_t rpm)
 void DcMotor::loop(void)
 {
 	unsigned long cur_usec = micros();
+	prevRpm = curRpm;
     if (pEncoder) {
 		curRpm = getCurRpmFromEncoder(cur_usec);
     }
@@ -99,3 +103,23 @@ void DcMotor::setPwmByPid(void)
 	setPwm(pwm);
 }
 
+void DcMotor::incKp(float delta)
+{
+	if (pid) {
+		pid->incKp(delta);
+	}
+}
+
+void DcMotor::incKi(float delta)
+{
+	if (pid) {
+		pid->incKi(delta);
+	}
+}
+
+void DcMotor::incKd(float delta)
+{
+	if (pid) {
+		pid->incKd(delta);
+	}
+}

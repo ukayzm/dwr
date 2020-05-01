@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#include "dcmotor.h"
 #include "board.h"
 #include "status_led.h"
 
@@ -10,10 +11,11 @@ static unsigned long last_change_msec;
 
 static char ledOnOffTime[MODE_MAX][MAX_PHASE] = {
 	/* x 100 msec; HIGN in even phase, LOW in odd phase */
+	{5, 5},
 	{10, 10},
-	{5, 10},
 	{1, 9},
 	{1, 1, 1, 7},
+	{30, 0},
 };
 
 void setup_status_led() {
@@ -48,3 +50,12 @@ void loop_status_led() {
 	}
 }
 
+void print_motor_rpm(void)
+{
+	int16_t accel0 = motor0->getAccelRpm();
+	int16_t accel1 = motor1->getAccelRpm();
+	if (accel0 || accel1) {
+		sprintf(strbuf, "@ %d: rpm motor0=%d, motor1=%d", cur_msec, motor0->getCurRpm(), motor1->getCurRpm());
+		Serial.println(strbuf);
+	}
+}

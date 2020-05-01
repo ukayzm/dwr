@@ -1,7 +1,7 @@
 #include "board.h"
 
-#define SMOKE_TEST
-#define SMOKE_TEST_SERIAL
+//#define SMOKE_TEST
+//#define SMOKE_TEST_SERIAL
 
 void setup() {
 #ifdef SMOKE_TEST

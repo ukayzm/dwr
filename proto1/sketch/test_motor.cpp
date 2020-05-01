@@ -12,39 +12,45 @@ void test_next_step_none(void)
 
 void test_next_step_motor_dir(void)
 {
+	int16_t new_pwm = 0;
 	if (step < 4) {
 		static char pwm[] = {
 			0, 100, 0, -100,
 		};
-		motorToTest->setPwm(pwm[step]);
-		if (step % 2 == 0) {
-			next_step_msec = cur_msec + 500;
-		} else {
-			next_step_msec = cur_msec + 1000;
-		}
-		step++;
+		new_pwm = pwm[step];
 	} else {
 		step = 0;
 		mode = MODE_READY;
+	}
+	motorToTest->setPwm(new_pwm);
+	sprintf(strbuf, "step %d; set motor%d pwm %d", step, motorToTest->id, new_pwm);
+	Serial.println(strbuf);
+	if (mode != MODE_READY) {
+		next_step_msec = cur_msec + 1000;
+		step++;
 	}
 }
 
 void test_next_step_motor_pwm(void)
 {
-	int16_t new_rpm = 0;
+	int16_t new_pwm = 0;
 	if (step <= 10) {
-		new_rpm = step * motorToTest->getMaxRpm() / 10;
+		new_pwm = step * 255 / 10;
 	} else if (step <= 30) {
-		new_rpm = (20 - step) * motorToTest->getMaxRpm() / 10;
+		new_pwm = (20 - step) * 255 / 10;
 	} else if (step <= 40) {
-		new_rpm = (40 - step) * motorToTest->getMaxRpm() / 10;
+		new_pwm = (40 - step) * 255 / 10;
 	} else {
 		step = 0;
 		mode = MODE_READY;
 	}
-	motorToTest->setRpm(new_rpm);
-	next_step_msec = cur_msec + 1000;
-	step++;
+	motorToTest->setPwm(new_pwm);
+	sprintf(strbuf, "step %d; set motor%d pwm %d", step, motorToTest->id, new_pwm);
+	Serial.println(strbuf);
+	if (mode != MODE_READY) {
+		next_step_msec = cur_msec + 1000;
+		step++;
+	}
 }
 
 void test_next_step_motor_rpm(void)
@@ -61,8 +67,30 @@ void test_next_step_motor_rpm(void)
 		mode = MODE_READY;
 	}
 	motorToTest->setRpm(new_rpm);
-	next_step_msec = cur_msec + 1000;
-	step++;
+	sprintf(strbuf, "step %d; set motor%d rpm %d", step, motorToTest->id, new_rpm);
+	Serial.println(strbuf);
+	if (mode != MODE_READY) {
+		next_step_msec = cur_msec + 1000;
+		step++;
+	}
+}
+
+void test_next_step_motor_rpm_single(void)
+{
+	int16_t new_rpm = 0;
+	if (step == 0) {
+		new_rpm = 60;
+	} else {
+		step = 0;
+		mode = MODE_READY;
+	}
+	motorToTest->setRpm(new_rpm);
+	sprintf(strbuf, "step %d; set motor%d rpm %d", step, motorToTest->id, new_rpm);
+	Serial.println(strbuf);
+	if (mode != MODE_READY) {
+		next_step_msec = cur_msec + 3000;
+		step++;
+	}
 }
 
 void (*test_next_step[])(void) = {
@@ -70,6 +98,7 @@ void (*test_next_step[])(void) = {
 	test_next_step_motor_dir,
 	test_next_step_motor_pwm,
 	test_next_step_motor_rpm,
+	test_next_step_motor_rpm_single,
 };
 
 void test_loop(void)
@@ -79,7 +108,7 @@ void test_loop(void)
 	}
 }
 
-void start_test_motor_dir(Motor *motor)
+void start_test_motor_dir(DcMotor *motor)
 {
 	motorToTest = motor;
 	mode = MODE_TEST_MOTOR_DIR;
@@ -87,7 +116,7 @@ void start_test_motor_dir(Motor *motor)
 	next_step_msec = 0;
 }
 
-void start_test_motor_speed(Motor *motor)
+void start_test_motor_pwm(DcMotor *motor)
 {
 	motorToTest = motor;
 	mode = MODE_TEST_MOTOR_PWM;
@@ -95,10 +124,18 @@ void start_test_motor_speed(Motor *motor)
 	next_step_msec = 0;
 }
 
-void start_test_motor_speed(DcMotor *motor)
+void start_test_motor_rpm(DcMotor *motor)
 {
 	motorToTest = motor;
 	mode = MODE_TEST_MOTOR_RPM;
+	step = 0;
+	next_step_msec = 0;
+}
+
+void start_test_motor_rpm_single(DcMotor *motor)
+{
+	motorToTest = motor;
+	mode = MODE_TEST_MOTOR_RPM_SINGLE;
 	step = 0;
 	next_step_msec = 0;
 }
