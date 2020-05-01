@@ -15,7 +15,7 @@
 #define PIN_ENCODER_INTR_A		2
 #define PIN_ENCODER_INTR_B		3
 #define PIN_ENCODER_DIR_A		4
-#define PIN_ENCODER_DIR_B		5
+#define PIN_ENCODER_DIR_B		11
 
 #define ENCODER_INTR_PER_REVOLUTION		660		/* 660 intr per revolution */
 
