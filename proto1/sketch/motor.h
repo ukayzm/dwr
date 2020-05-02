@@ -29,7 +29,7 @@ public:
 		setRpm(new_rpm);
 	}
 	virtual void loop(void);
-	char id;
+	int id;
 protected:
 	int16_t maxRpm;
 	int16_t prevRpm, curRpm;

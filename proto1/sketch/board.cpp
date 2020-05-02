@@ -38,10 +38,10 @@ void setup_board()
 	setup_ir();
 
 	motor0.attachEncoder(&encoder0);
-	motor0.attachPid(&pid0);
+	//motor0.attachPid(&pid0);
 
 	motor1.attachEncoder(&encoder1);
-	motor0.attachPid(&pid1);
+	//motor0.attachPid(&pid1);
 
 	prev_msec = millis();
 	mode = 0;

@@ -7,7 +7,7 @@ static DcMotor *motorToTest;
 static int step;
 static long next_step_msec;
 
-void print_test_status(char id, char target, int16_t value)
+void print_test_status(int id, char target, int16_t value)
 {
 	Serial.print(F("step "));
 	Serial.print(step);
@@ -28,15 +28,10 @@ void test_next_step_none(void)
 void test_next_step_motor_dir(void)
 {
 	int16_t new_pwm = 0;
-	if (step < 4) {
-		static char pwm[] = {
-			0, 255, 0, -255,
-		};
-		new_pwm = pwm[step];
-	} else {
-		step = 0;
-		mode = MODE_READY;
-	}
+	static int16_t pwm[] = {
+		0, 255, 0, -255,
+	};
+	new_pwm = pwm[step%4];
 	motorToTest->setPwm(new_pwm);
 	print_test_status(motorToTest->id, 0, new_pwm);
 	if (mode != MODE_READY) {
@@ -138,12 +133,10 @@ void (*test_next_step[])(void) = {
 
 void loop_test(void)
 {
-	if (mode == MODE_READY) {
-		return;
-	}
-
-	if (next_step_msec <= cur_msec) {
-		test_next_step[mode]();
+	if (mode != MODE_READY) {
+		if (next_step_msec <= cur_msec) {
+			test_next_step[mode]();
+		}
 	}
 
 	int16_t accel0 = motor0.getAccelRpm();
@@ -158,10 +151,17 @@ void loop_test(void)
 
 void start_test_motor_dir(DcMotor *motor)
 {
-	motorToTest = motor;
-	mode = MODE_TEST_MOTOR_DIR;
-	step = 0;
-	next_step_msec = 0;
+	if (mode == MODE_READY) {
+		motorToTest = motor;
+		mode = MODE_TEST_MOTOR_DIR;
+		step = 0;
+		next_step_msec = 0;
+	} else {
+		step = 0;
+		mode = MODE_READY;
+		motor->setPwm(0);
+		print_test_status(motor->id, 0, 0);
+	}
 }
 
 void start_test_motor_pwm(DcMotor *motor)

@@ -15,9 +15,10 @@ public:
 	int16_t getCountAndReset(void);
 	void resetCount(void);
 	int16_t getIntrPerRevolution(void);
+    unsigned long prev_usec;
 private:
 	uint16_t intrPerRevolution;
-	char id;
+	int id;
 };
 
 

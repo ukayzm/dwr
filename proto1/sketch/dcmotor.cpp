@@ -13,13 +13,15 @@ DcMotor::DcMotor(int _id, int16_t max_rpm, int pin_pwm, int pin_dirA, int pin_di
 	pinMode(pinDirA, OUTPUT);
 	pinMode(pinDirB, OUTPUT);
 	maxRpm = max_rpm;
+	curPwm = 0;
+	tgtRpm = 0;
 }
 
 void DcMotor::attachEncoder(Encoder *encoder)
 {
 	pEncoder = encoder;
     pEncoder->resetCount();
-    prev_usec = micros();
+    pEncoder->prev_usec = micros();
 }
 
 void DcMotor::setPwm(int16_t pwm)
@@ -78,13 +80,13 @@ void DcMotor::loop(void)
 	if (pid) {
 		setPwmByPid();
 	}
-	prev_usec = cur_usec;
 }
 
 int16_t DcMotor::getCurRpmFromEncoder(unsigned long cur_usec)
 {
     int16_t count = pEncoder->getCountAndReset();
-	int dt = cur_usec - prev_usec;
+	int dt = cur_usec - pEncoder->prev_usec;
+	pEncoder->prev_usec = cur_usec;
 	if (dt <= 0) {
 		return curRpm;
 	}
