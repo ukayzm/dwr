@@ -17,7 +17,7 @@ public:
 	int16_t getIntrPerRevolution(void);
 private:
 	uint16_t intrPerRevolution;
-	int id;
+	char id;
 };
 
 

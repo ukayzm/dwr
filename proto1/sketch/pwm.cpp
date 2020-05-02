@@ -76,12 +76,11 @@ void setPwmFrequency(int pin, int divisor)
  */
 void setDivisorTimer1(int divisor)
 {
-	Serial.print("Timer1 for PIN 9, 10: PWM frequency = 31250 / ");
+	Serial.print(F("Timer1 for PIN 9, 10: PWM frequency = 31250 / "));
 	Serial.print(divisor);
-	Serial.print(" = ");
+	Serial.print(F(" = "));
 	Serial.print(31250 / divisor);
-	Serial.print(" Hz");
-	Serial.println();
+	Serial.println(F(" Hz"));
 
 	setPwmFrequency(9, divisor);
 }
@@ -101,9 +100,8 @@ uint16_t getPwmFrequencyTimer1(void)
 	case 0x5:
 		return 30;
 	default:
-		Serial.print("unknown (");
-		Serial.print(mode);
-		Serial.println(")");
+		Serial.print(F("unknown "));
+		Serial.println(mode);
 		break;
 	}
 }

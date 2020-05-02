@@ -35,7 +35,7 @@ Encoder::Encoder(int pin_intr, int pin_dir, int intr_per_rev)
 	} else if (id == 1) {
 		isr = isr1;
 	} else {
-		Serial.println("too many encoder");
+		Serial.println(F("too many encoder"));
 		return;
 	}
 
@@ -44,14 +44,6 @@ Encoder::Encoder(int pin_intr, int pin_dir, int intr_per_rev)
 	attachInterrupt(digitalPinToInterrupt(pin_intr), isr, FALLING);
 	pinMode(pin_dir, INPUT_PULLUP);
 	intrPerRevolution = intr_per_rev;
-
-	Serial.print("Encoder PIN_INTR = ");
-	Serial.print(pin_intr);
-	Serial.print(", PIN_DIR = ");
-	Serial.print(pin_dir);
-	Serial.print(", intr_per_rev = ");
-	Serial.print(intr_per_rev);
-	Serial.println();
 }
 
 void Encoder::resetCount(void)

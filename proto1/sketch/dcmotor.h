@@ -15,14 +15,15 @@ public:
 	void setPwm(int16_t pwm);			/* PWM -255 ~ +255 */
 	int16_t getPwm(void);
 	void attachEncoder(Encoder *encoder);
-	void enablePid(double Kp, double Ki, double Kd);
+	void attachPid(Pid *_pid);
 	void setRpm(int16_t rpm);
 	void loop(void);
 	void incKp(float delta);
 	void incKi(float delta);
 	void incKd(float delta);
+	void printStatus(void);
 private:
-	int pinPwm, pinDirA, pinDirB;
+	char pinPwm, pinDirA, pinDirB;
 	int16_t curPwm;
     int16_t tgtRpm;
 	Encoder *pEncoder;

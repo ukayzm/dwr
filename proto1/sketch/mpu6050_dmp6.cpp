@@ -74,22 +74,9 @@ MPU6050 mpu;
  * ========================================================================= */
 
 
-// MPU control/status vars
-bool dmpReady = false;  // set true if DMP init was successful
-uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
-uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
-uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
-uint8_t fifoBuffer[64]; // FIFO storage buffer
-
 // orientation/motion vars
-Quaternion q;           // [w, x, y, z]         quaternion container
-VectorFloat gravity;    // [x, y, z]            gravity vector
 float euler[3];         // [psi, theta, phi]    Euler angle container
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
-
-// packet structure for InvenSense teapot demo
-uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
-
 
 
 // ================================================================
@@ -112,16 +99,16 @@ void setup_mpu6050_dmp6() {
     // crystal solution for the UART timer.
 
     // initialize device
-    Serial.println(F("Initializing I2C devices..."));
+    Serial.println(F("Init mpu"));
     mpu.initialize();
 
     // verify connection
-    Serial.println(F("Testing device connections..."));
-    Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+	if (mpu.testConnection() == false) {
+    	Serial.println(F("mpu failed"));
+	}
 
     // load and configure the DMP
-    Serial.println(F("Initializing DMP..."));
-    devStatus = mpu.dmpInitialize();
+    uint8_t devStatus = mpu.dmpInitialize();
 
     // supply your own gyro offsets here, scaled for min sensitivity
     mpu.setXGyroOffset(220);
@@ -136,23 +123,16 @@ void setup_mpu6050_dmp6() {
         mpu.CalibrateGyro(6);
         mpu.PrintActiveOffsets();
         // turn on the DMP, now that it's ready
-        Serial.println(F("Enabling DMP..."));
         mpu.setDMPEnabled(true);
-
-        mpuIntStatus = mpu.getIntStatus();
 
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
         Serial.println(F("DMP ready!"));
-        dmpReady = true;
-
-        // get expected DMP packet size for later comparison
-        packetSize = mpu.dmpGetFIFOPacketSize();
     } else {
         // ERROR!
         // 1 = initial memory load failed
         // 2 = DMP configuration updates failed
         // (if it's going to break, usually the code will be 1)
-        Serial.print(F("DMP Initialization failed (code "));
+        Serial.print(F("DMP Init failed (code "));
         Serial.print(devStatus);
         Serial.println(F(")"));
     }
@@ -165,13 +145,11 @@ void setup_mpu6050_dmp6() {
 // ================================================================
 
 int loop_mpu6050_dmp6(void) {
-    // if programming failed, don't try to do anything
-    if (!dmpReady) {
-		return -1;
-	}
-
+	uint8_t fifoBuffer[64]; // FIFO storage buffer
     // read a packet from FIFO (every 10 msec)
     if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet 
+		Quaternion q;           // [w, x, y, z]         quaternion container
+		VectorFloat gravity;    // [x, y, z]            gravity vector
 		mpu.dmpGetQuaternion(&q, fifoBuffer);
 		mpu.dmpGetEuler(euler, &q);
 		mpu.dmpGetGravity(&gravity, &q);

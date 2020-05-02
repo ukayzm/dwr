@@ -53,10 +53,12 @@ void loop_status_led() {
 
 void print_motor_rpm(void)
 {
-	int16_t accel0 = motor0->getAccelRpm();
-	int16_t accel1 = motor1->getAccelRpm();
+	int16_t accel0 = motor0.getAccelRpm();
+	int16_t accel1 = motor1.getAccelRpm();
 	if (accel0 || accel1) {
-		sprintf(strbuf, "@ %d: rpm motor0=%d, motor1=%d", cur_msec, motor0->getCurRpm(), motor1->getCurRpm());
-		Serial.println(strbuf);
+		Serial.print(cur_msec);
+		motor0.printStatus();
+		motor1.printStatus();
+		Serial.println();
 	}
 }

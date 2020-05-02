@@ -59,14 +59,14 @@ extern Mode mode;
 
 extern unsigned long cur_msec;
 extern unsigned long cur_usec;
-extern char strbuf[256];
 
 
-extern DcMotor *motor0, *motor1;
+extern DcMotor motor0, motor1;
 
 
 extern void setup_board(void);
 extern void loop_board(void);
+extern void print_tab(void);
 
 
 #endif // __BOARD_H__

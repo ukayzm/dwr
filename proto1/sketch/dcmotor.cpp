@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "dcmotor.h"
 #include "pid.h"
+#include "board.h"
 
 
 DcMotor::DcMotor(int _id, int16_t max_rpm, int pin_pwm, int pin_dirA, int pin_dirB)
@@ -13,18 +14,6 @@ DcMotor::DcMotor(int _id, int16_t max_rpm, int pin_pwm, int pin_dirA, int pin_di
 	pinMode(pinDirA, OUTPUT);
 	pinMode(pinDirB, OUTPUT);
 	maxRpm = max_rpm;
-
-	Serial.print("DcMotor");
-	Serial.print(id);
-	Serial.print(", maxRpm=");
-	Serial.print(maxRpm);
-	Serial.print(", PIN pwm=");
-	Serial.print(pinPwm);
-	Serial.print(", dirA=");
-	Serial.print(pinDirA);
-	Serial.print(", dirB=");
-	Serial.print(pinDirB);
-	Serial.println();
 }
 
 void DcMotor::attachEncoder(Encoder *encoder)
@@ -59,9 +48,9 @@ void DcMotor::setPwm(int16_t pwm)
 	analogWrite(pinPwm, pwm);
 }
 
-void DcMotor::enablePid(double Kp, double Ki, double Kd)
+void DcMotor::attachPid(Pid *_pid)
 {
-	pid = new Pid(Kp, Ki, Kd);
+	pid = _pid;
 }
 
 int16_t DcMotor::getPwm(void)
@@ -122,4 +111,12 @@ void DcMotor::incKd(float delta)
 	if (pid) {
 		pid->incKd(delta);
 	}
+}
+
+void DcMotor::printStatus(void)
+{
+	print_tab();
+	Serial.print(curPwm);
+	print_tab();
+	Serial.print(curRpm);
 }

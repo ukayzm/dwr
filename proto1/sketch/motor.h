@@ -19,7 +19,7 @@ public:
 		return maxRpm;
 	}
 	virtual void loop(void);
-	int id;
+	char id;
 protected:
 	int16_t maxRpm;
 	int16_t prevRpm, curRpm;

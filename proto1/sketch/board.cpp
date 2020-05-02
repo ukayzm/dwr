@@ -9,7 +9,12 @@
 #include "test_motor.h"
 
 
-DcMotor *motor0, *motor1;
+DcMotor motor0 = DcMotor(0, 300, PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A);
+DcMotor motor1 = DcMotor(1, 300, PIN_PWM_B, PIN_DIR1_MOTOR_B, PIN_DIR2_MOTOR_B);
+Encoder encoder0 = Encoder(PIN_ENCODER_INTR_A, PIN_ENCODER_DIR_A, ENCODER_INTR_PER_REVOLUTION);
+Encoder encoder1 = Encoder(PIN_ENCODER_INTR_B, PIN_ENCODER_DIR_B, ENCODER_INTR_PER_REVOLUTION);
+Pid pid0 = Pid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
+Pid pid1 = Pid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
 
 
 unsigned long prev_msec;
@@ -17,15 +22,14 @@ unsigned long cur_msec;
 unsigned long cur_usec;
 Mode mode;
 
-char strbuf[256];
-
 
 void setup_board()
 {
 	Serial.begin(115200);
     while (!Serial); // wait for Leonardo enumeration, others continue immediately
-	Serial.println("Power supply: Xiaomi Phone Charger 10400 to 12V converter USB type");
-	Serial.println("Motor driver: L298N");
+	Serial.println(F("Xiaomi Phone Charger 10400"));
+	Serial.println(F("USB to 12V converter"));
+	Serial.println(F("L298N"));
 
 	setDivisorTimer1(1);
 
@@ -33,19 +37,16 @@ void setup_board()
 	setup_status_led();
 	setup_ir();
 
-	motor0 = new DcMotor(0, 300, PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A);
-	motor0->attachEncoder(new Encoder(PIN_ENCODER_INTR_A, PIN_ENCODER_DIR_A, ENCODER_INTR_PER_REVOLUTION));
-	motor0->enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
+	motor0.attachEncoder(&encoder0);
+	motor0.attachPid(&pid0);
 
-	motor1 = new DcMotor(1, 300, PIN_PWM_B, PIN_DIR1_MOTOR_B, PIN_DIR2_MOTOR_B);
-	motor1->attachEncoder(new Encoder(PIN_ENCODER_INTR_B, PIN_ENCODER_DIR_B, ENCODER_INTR_PER_REVOLUTION));
-	motor1->enablePid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
+	motor1.attachEncoder(&encoder1);
+	motor0.attachPid(&pid1);
 
 	prev_msec = millis();
 	mode = 0;
 }
 
-int first = 0;
 void loop_board()
 {
 	cur_msec = millis();
@@ -61,11 +62,16 @@ void loop_board()
 		test_loop();
 	}
 
-	motor0->loop();
-	motor1->loop();
+	motor0.loop();
+	motor1.loop();
 	loop_status_led();
 	if (mode != MODE_READY) {
 		print_motor_rpm();
 	}
+}
+
+void print_tab(void)
+{
+	Serial.print(F("\t"));
 }
 
