@@ -81,18 +81,37 @@ void loop_ir()
         Serial.println("STOP");
     } else if (ir_code == 0x7547960e) {
         Serial.println("NEXT");
-		start_test_motor_pwm(motor0);
     } else if (ir_code == 0xd1921028) {
         Serial.println("PREV");
-		start_test_motor_rpm(motor1);
     } else if (ir_code == 0x26ecbcf3) {
         Serial.println("(0)");
+		start_test_mpu6050();
     } else if (ir_code == 0x9004b206) {
         Serial.println("(1)");
 		start_test_motor_dir(motor0);
     } else if (ir_code == 0xc35f14b9) {
         Serial.println("(2)");
 		start_test_motor_dir(motor1);
+    } else if (ir_code == 0xa6034632) {
+        Serial.println("(3)");
+		start_test_motor_pwm(motor0);
+    } else if (ir_code == 0x45897fb8) {
+        Serial.println("(4)");
+		start_test_motor_pwm(motor1);
+    } else if (ir_code == 0x6a8bf890) {
+        Serial.println("(5)");
+		start_test_motor_rpm(motor0);
+    } else if (ir_code == 0x08a2cf97) {
+        Serial.println("(6)");
+		start_test_motor_rpm(motor1);
+    } else if (ir_code == 0x462c837e) {
+        Serial.println("(7)");
+		start_test_motor_rpm_single(motor0);
+    } else if (ir_code == 0x42c5c050) {
+        Serial.println("(8)");
+		start_test_motor_rpm_single(motor1);
+    } else if (ir_code == 0x67c83928) {
+        Serial.println("(9)");
     } else if (ir_code == 0x6bef8366) {
         Serial.println("PWR");
     } else if (ir_code == 0xbe663d0a) {

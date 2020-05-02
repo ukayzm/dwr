@@ -14,8 +14,9 @@ static char ledOnOffTime[MODE_MAX][MAX_PHASE] = {
 	{5, 5},
 	{10, 10},
 	{1, 9},
-	{1, 1, 1, 7},
+	{1, 2, 1, 6},
 	{30, 0},
+	{1, 2},
 };
 
 void setup_status_led() {
