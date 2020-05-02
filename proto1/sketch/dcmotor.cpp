@@ -1,7 +1,6 @@
 #include "Arduino.h"
 #include "dcmotor.h"
 #include "pid.h"
-#include "board.h"
 
 
 DcMotor::DcMotor(int _id, int16_t max_rpm, int pin_pwm, int pin_dirA, int pin_dirB)
@@ -61,6 +60,12 @@ int16_t DcMotor::getPwm(void)
 void DcMotor::setRpm(int16_t rpm)
 {
 	tgtRpm = rpm;
+	if (pEncoder == NULL) {
+		curRpm = rpm;
+	}
+	if (pid == NULL) {
+		setPwm((long)rpm * 255 / maxRpm);
+	}
 }
 
 void DcMotor::loop(void)
@@ -115,8 +120,10 @@ void DcMotor::incKd(float delta)
 
 void DcMotor::printStatus(void)
 {
-	print_tab();
+	Serial.print(F("\t"));
 	Serial.print(curPwm);
-	print_tab();
+	Serial.print(F("\t"));
 	Serial.print(curRpm);
+	Serial.print(F("\t"));
+	Serial.print(tgtRpm);
 }

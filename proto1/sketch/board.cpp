@@ -6,7 +6,7 @@
 #include "mpu6050_dmp6.h"
 #include "status_led.h"
 #include "ir.h"
-#include "test_motor.h"
+#include "test.h"
 
 
 DcMotor motor0 = DcMotor(0, 300, PIN_PWM_A, PIN_DIR1_MOTOR_A, PIN_DIR2_MOTOR_A);
@@ -57,21 +57,11 @@ void loop_board()
 	prev_msec = cur_msec;
 
 	loop_mpu6050_dmp6();
-	loop_ir();
-	if (mode != MODE_READY) {
-		test_loop();
-	}
-
 	motor0.loop();
 	motor1.loop();
-	loop_status_led();
-	if (mode != MODE_READY) {
-		print_motor_rpm();
-	}
-}
 
-void print_tab(void)
-{
-	Serial.print(F("\t"));
+	loop_ir();
+	loop_test();
+	loop_status_led();
 }
 

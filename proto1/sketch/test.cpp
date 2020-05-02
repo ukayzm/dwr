@@ -104,6 +104,11 @@ void test_next_step_motor_rpm_single(void)
 	}
 }
 
+void print_tab(void)
+{
+	Serial.print(F("\t"));
+}
+
 void test_next_step_mpu6050(void)
 {
 	next_step_msec = cur_msec + 100;
@@ -131,10 +136,23 @@ void (*test_next_step[])(void) = {
 	test_next_step_mpu6050,
 };
 
-void test_loop(void)
+void loop_test(void)
 {
+	if (mode == MODE_READY) {
+		return;
+	}
+
 	if (next_step_msec <= cur_msec) {
 		test_next_step[mode]();
+	}
+
+	int16_t accel0 = motor0.getAccelRpm();
+	int16_t accel1 = motor1.getAccelRpm();
+	if (accel0 || accel1) {
+		Serial.print(cur_msec);
+		motor0.printStatus();
+		motor1.printStatus();
+		Serial.println();
 	}
 }
 
@@ -181,4 +199,3 @@ void start_test_mpu6050()
 		mode = MODE_READY;
 	}
 }
-

@@ -66,7 +66,6 @@ extern DcMotor motor0, motor1;
 
 extern void setup_board(void);
 extern void loop_board(void);
-extern void print_tab(void);
 
 
 #endif // __BOARD_H__

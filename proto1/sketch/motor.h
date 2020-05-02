@@ -18,6 +18,16 @@ public:
 	int16_t getMaxRpm(void) {
 		return maxRpm;
 	}
+	void incRpmPercent(int percent_point)
+	{
+		int16_t new_rpm = curRpm + (long)maxRpm * percent_point / 100;
+		if (new_rpm >= maxRpm) {
+			new_rpm = maxRpm;
+		} else if (new_rpm <= -maxRpm) {
+			new_rpm = -maxRpm;
+		}
+		setRpm(new_rpm);
+	}
 	virtual void loop(void);
 	char id;
 protected:
