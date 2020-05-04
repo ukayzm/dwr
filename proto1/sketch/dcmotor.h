@@ -22,10 +22,10 @@ public:
 	void incKi(float delta);
 	void incKd(float delta);
 	void printStatus(void);
+	void incRpmPercent(int percent_point);
 private:
 	char pinPwm, pinDirA, pinDirB;
 	int16_t curPwm;
-    int16_t tgtRpm;
 	Encoder *pEncoder;
     Pid *pid;
     double fInRpm, fTgtRpm, fTgtPwm;

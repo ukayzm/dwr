@@ -61,13 +61,19 @@ int16_t DcMotor::getPwm(void)
 
 void DcMotor::setRpm(int16_t rpm)
 {
-	tgtRpm = rpm;
+	Motor::setRpm(rpm);
 	if (pEncoder == NULL) {
 		curRpm = rpm;
 	}
 	if (pid == NULL) {
 		setPwm((long)rpm * 255 / maxRpm);
 	}
+}
+
+void DcMotor::incRpmPercent(int percent_point)
+{
+	Motor::incRpmPercent(percent_point);
+	DcMotor::setRpm(tgtRpm);
 }
 
 void DcMotor::loop(void)

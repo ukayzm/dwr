@@ -23,8 +23,8 @@
 /* motor */
 #define PIN_PWM_A				9
 #define PIN_PWM_B				10
-#define PIN_DIR1_MOTOR_A		5
-#define PIN_DIR2_MOTOR_A		6
+#define PIN_DIR1_MOTOR_A		6
+#define PIN_DIR2_MOTOR_A		5
 #define PIN_DIR1_MOTOR_B		7
 #define PIN_DIR2_MOTOR_B		8
 

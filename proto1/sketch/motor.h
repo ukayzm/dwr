@@ -8,7 +8,9 @@
 class Motor
 {
 public:
-	virtual void setRpm(int16_t rpm);
+	void setRpm(int16_t rpm) {
+		tgtRpm = rpm;
+	}
 	int16_t getAccelRpm(void) {
 		return curRpm - prevRpm;
 	}
@@ -20,7 +22,7 @@ public:
 	}
 	void incRpmPercent(int percent_point)
 	{
-		int16_t new_rpm = curRpm + (long)maxRpm * percent_point / 100;
+		int16_t new_rpm = tgtRpm + (long)maxRpm * percent_point / 100;
 		if (new_rpm >= maxRpm) {
 			new_rpm = maxRpm;
 		} else if (new_rpm <= -maxRpm) {
@@ -31,7 +33,7 @@ public:
 	virtual void loop(void);
 	int id;
 protected:
-	int16_t maxRpm;
+	int16_t maxRpm, tgtRpm;
 	int16_t prevRpm, curRpm;
 };
 
