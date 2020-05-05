@@ -7,6 +7,11 @@ static DcMotor *motorToTest;
 static int step;
 static long next_step_msec;
 
+void print_tab(void)
+{
+	Serial.print(F("\t"));
+}
+
 void print_test_status(int id, char target, int16_t value)
 {
 	Serial.print(F("step "));
@@ -25,6 +30,21 @@ void test_next_step_none(void)
 {
 }
 
+void start_test_motor_dir(DcMotor *motor)
+{
+	if (mode == MODE_READY) {
+		motorToTest = motor;
+		mode = MODE_TEST_MOTOR_DIR;
+		step = 0;
+		next_step_msec = 0;
+	} else {
+		step = 0;
+		mode = MODE_READY;
+		motor->setPwm(0);
+		print_test_status(motor->id, 0, 0);
+	}
+}
+
 void test_next_step_motor_dir(void)
 {
 	int16_t new_pwm = 0;
@@ -35,9 +55,17 @@ void test_next_step_motor_dir(void)
 	motorToTest->setPwm(new_pwm);
 	print_test_status(motorToTest->id, 0, new_pwm);
 	if (mode != MODE_READY) {
-		next_step_msec = cur_msec + 1000;
 		step++;
+		next_step_msec = cur_msec + 1000;
 	}
+}
+
+void start_test_motor_pwm(DcMotor *motor)
+{
+	motorToTest = motor;
+	mode = MODE_TEST_MOTOR_PWM;
+	step = 0;
+	next_step_msec = 0;
 }
 
 void test_next_step_motor_pwm(void)
@@ -61,6 +89,14 @@ void test_next_step_motor_pwm(void)
 	}
 }
 
+void start_test_motor_rpm(DcMotor *motor)
+{
+	motorToTest = motor;
+	mode = MODE_TEST_MOTOR_RPM;
+	step = 0;
+	next_step_msec = 0;
+}
+
 void test_next_step_motor_rpm(void)
 {
 	int16_t new_rpm = 0;
@@ -82,11 +118,26 @@ void test_next_step_motor_rpm(void)
 	}
 }
 
+void start_test_motor_rpm_single(DcMotor *motor)
+{
+	if (mode == MODE_READY) {
+		motorToTest = motor;
+		mode = MODE_TEST_MOTOR_RPM_SINGLE;
+		step = 0;
+		next_step_msec = 0;
+	} else {
+		step = 0;
+		mode = MODE_READY;
+		motor->setPwm(0);
+		print_test_status(motor->id, 0, 0);
+	}
+}
+
 void test_next_step_motor_rpm_single(void)
 {
 	int16_t new_rpm = 0;
 	if (step == 0) {
-		new_rpm = 60;
+		new_rpm = 255;
 	} else {
 		step = 0;
 		mode = MODE_READY;
@@ -94,14 +145,21 @@ void test_next_step_motor_rpm_single(void)
 	motorToTest->setRpm(new_rpm);
 	print_test_status(motorToTest->id, 1, new_rpm);
 	if (mode != MODE_READY) {
-		next_step_msec = cur_msec + 3000;
+		next_step_msec = cur_msec + 60000;
 		step++;
 	}
 }
 
-void print_tab(void)
+void start_test_mpu6050()
 {
-	Serial.print(F("\t"));
+	if (mode == MODE_READY) {
+		mode = MODE_TEST_MPU6050;
+		step = 0;
+		next_step_msec = 0;
+	} else {
+		step = 0;
+		mode = MODE_READY;
+	}
 }
 
 void test_next_step_mpu6050(void)
@@ -149,53 +207,3 @@ void loop_test(void)
 	}
 }
 
-void start_test_motor_dir(DcMotor *motor)
-{
-	if (mode == MODE_READY) {
-		motorToTest = motor;
-		mode = MODE_TEST_MOTOR_DIR;
-		step = 0;
-		next_step_msec = 0;
-	} else {
-		step = 0;
-		mode = MODE_READY;
-		motor->setPwm(0);
-		print_test_status(motor->id, 0, 0);
-	}
-}
-
-void start_test_motor_pwm(DcMotor *motor)
-{
-	motorToTest = motor;
-	mode = MODE_TEST_MOTOR_PWM;
-	step = 0;
-	next_step_msec = 0;
-}
-
-void start_test_motor_rpm(DcMotor *motor)
-{
-	motorToTest = motor;
-	mode = MODE_TEST_MOTOR_RPM;
-	step = 0;
-	next_step_msec = 0;
-}
-
-void start_test_motor_rpm_single(DcMotor *motor)
-{
-	motorToTest = motor;
-	mode = MODE_TEST_MOTOR_RPM_SINGLE;
-	step = 0;
-	next_step_msec = 0;
-}
-
-void start_test_mpu6050()
-{
-	if (mode == MODE_READY) {
-		mode = MODE_TEST_MPU6050;
-		step = 0;
-		next_step_msec = 0;
-	} else {
-		step = 0;
-		mode = MODE_READY;
-	}
-}

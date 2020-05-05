@@ -21,7 +21,6 @@ void DcMotor::attachEncoder(Encoder *encoder)
 {
 	pEncoder = encoder;
     pEncoder->resetCount();
-    pEncoder->prev_usec = micros();
 }
 
 void DcMotor::setPwm(int16_t pwm)
@@ -81,22 +80,12 @@ void DcMotor::loop(void)
 	unsigned long cur_usec = micros();
 	prevRpm = curRpm;
     if (pEncoder) {
-		curRpm = getCurRpmFromEncoder(cur_usec);
+		pEncoder->getCountAndReset(cur_usec);
+		curRpm = pEncoder->getCurRpm();
     }
 	if (pid) {
 		setPwmByPid();
 	}
-}
-
-int16_t DcMotor::getCurRpmFromEncoder(unsigned long cur_usec)
-{
-    int16_t count = pEncoder->getCountAndReset();
-	int dt = cur_usec - pEncoder->prev_usec;
-	pEncoder->prev_usec = cur_usec;
-	if (dt <= 0) {
-		return curRpm;
-	}
-	return (double)(count * 60) / pEncoder->getIntrPerRevolution() * 1000000 / dt;
 }
 
 void DcMotor::setPwmByPid(void)

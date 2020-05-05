@@ -29,7 +29,6 @@ private:
 	Encoder *pEncoder;
     Pid *pid;
     double fInRpm, fTgtRpm, fTgtPwm;
-	int16_t getCurRpmFromEncoder(unsigned long cur_usec);
 	void setPwmByPid(void);
 };
 

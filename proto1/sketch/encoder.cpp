@@ -44,6 +44,7 @@ Encoder::Encoder(int pin_intr, int pin_dir, int intr_per_rev)
 	attachInterrupt(digitalPinToInterrupt(pin_intr), isr, FALLING);
 	pinMode(pin_dir, INPUT_PULLUP);
 	intrPerRevolution = intr_per_rev;
+	q_index = 0;
 }
 
 void Encoder::resetCount(void)
@@ -51,15 +52,30 @@ void Encoder::resetCount(void)
 	nCount[id] = 0;
 }
 
-int16_t Encoder::getCountAndReset(void)
+int16_t Encoder::getCountAndReset(unsigned long usec)
 {
 	int16_t count = nCount[id];
 	nCount[id] = 0;
+
+	q_count[q_index] = count;
+	q_usec[q_index] = usec;
+	q_index++;
+	q_index %= MAX_QUEUE;
 	return count;
 }
 
-int16_t Encoder::getIntrPerRevolution(void)
+int16_t Encoder::getCurRpm(void)
 {
-	return intrPerRevolution;
+	int16_t count = 0;
+	for (int i = 0; i < MAX_QUEUE; i++) {
+		if (i != q_index) {
+			count += q_count[i];
+		}
+	}
+	long dt = q_usec[(q_index + MAX_QUEUE - 1) % MAX_QUEUE] - q_usec[q_index];
+	if (dt <= 0) {
+		return 0;
+	}
+	return (double)(count * 60) / intrPerRevolution * 1000000 / dt;
 }
 
