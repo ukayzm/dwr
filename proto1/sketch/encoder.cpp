@@ -4,7 +4,7 @@
 
 static int pinDir[NUM_ENCODER];
 static int16_t nCount[NUM_ENCODER];
-static uint32_t ulTotalCount[NUM_ENCODER];
+uint32_t ulTotalCount[NUM_ENCODER];
 
 static int numEncoder = 0;
 

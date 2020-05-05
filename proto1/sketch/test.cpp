@@ -6,6 +6,7 @@
 static DcMotor *motorToTest;
 static int step;
 static long next_step_msec;
+extern uint32_t ulTotalCount[NUM_ENCODER];
 
 void print_tab(void)
 {
@@ -118,36 +119,55 @@ void test_next_step_motor_rpm(void)
 	}
 }
 
-void start_test_motor_rpm_single(DcMotor *motor)
+void start_test_encoder()
 {
 	if (mode == MODE_READY) {
-		motorToTest = motor;
-		mode = MODE_TEST_MOTOR_RPM_SINGLE;
+		mode = MODE_TEST_ENCODER;
 		step = 0;
 		next_step_msec = 0;
 	} else {
 		step = 0;
 		mode = MODE_READY;
-		motor->setPwm(0);
-		print_test_status(motor->id, 0, 0);
+		motor0.setPwm(0);
+		motor1.setPwm(0);
 	}
 }
 
-void test_next_step_motor_rpm_single(void)
+void test_next_step_encoder(void)
 {
+	static uint32_t count0, count1;
 	int16_t new_rpm = 0;
 	if (step == 0) {
 		new_rpm = 255;
-	} else {
-		step = 0;
-		mode = MODE_READY;
-	}
-	motorToTest->setRpm(new_rpm);
-	print_test_status(motorToTest->id, 1, new_rpm);
-	if (mode != MODE_READY) {
+		next_step_msec = cur_msec + 1000;
+		step++;
+	} else if (step == 1) {
+		new_rpm = 255;
+		count0 = ulTotalCount[0];
+		count1 = ulTotalCount[1];
 		next_step_msec = cur_msec + 60000;
 		step++;
+	} else {
+		uint32_t count_intr0 = ulTotalCount[0] - count0;
+		uint32_t count_intr1 = ulTotalCount[1] - count1;
+		step = 0;
+		mode = MODE_READY;
+		Serial.print("motor0:\t");
+		Serial.print(count_intr0);
+		Serial.print(" intr\t");
+		Serial.print((float)count_intr0 / 60);
+		Serial.print(" intr/s\t");
+		Serial.print((float)count_intr0 / ENCODER_INTR_PER_REVOLUTION);
+		Serial.print(" rpm,\tmotor1:\t");
+		Serial.print(count_intr1);
+		Serial.print(" intr\t");
+		Serial.print((float)count_intr1 / 60);
+		Serial.print(" intr/s\t");
+		Serial.print((float)count_intr1 / ENCODER_INTR_PER_REVOLUTION);
+		Serial.println(" rpm");
 	}
+	motor0.setRpm(new_rpm);
+	motor1.setRpm(new_rpm);
 }
 
 void start_test_mpu6050()
@@ -185,7 +205,7 @@ void (*test_next_step[])(void) = {
 	test_next_step_motor_dir,
 	test_next_step_motor_pwm,
 	test_next_step_motor_rpm,
-	test_next_step_motor_rpm_single,
+	test_next_step_encoder,
 	test_next_step_mpu6050,
 };
 
@@ -203,6 +223,12 @@ void loop_test(void)
 		Serial.print(cur_msec);
 		motor0.printStatus();
 		motor1.printStatus();
+		if (motor0.getPwm() == 0 && motor1.getPwm() == 0) {
+			Serial.print(F("\t"));
+			Serial.print(ulTotalCount[0]);
+			Serial.print(F("\t"));
+			Serial.print(ulTotalCount[1]);
+		}
 		Serial.println();
 	}
 }

@@ -116,10 +116,9 @@ void loop_ir()
 		start_test_motor_rpm(&motor1);
     } else if (ir_code == 0x462c837e) {
         Serial.println(F("(7)"));
-		start_test_motor_rpm_single(&motor0);
+		start_test_encoder();
     } else if (ir_code == 0x42c5c050) {
         Serial.println(F("(8)"));
-		start_test_motor_rpm_single(&motor1);
     } else if (ir_code == 0x67c83928) {
         Serial.println(F("(9)"));
     } else if (ir_code == 0x6bef8366) {

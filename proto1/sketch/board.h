@@ -17,7 +17,7 @@
 #define PIN_ENCODER_DIR_A		4
 #define PIN_ENCODER_DIR_B		11
 
-#define ENCODER_INTR_PER_REVOLUTION		660		/* 660 intr per revolution */
+#define ENCODER_INTR_PER_REVOLUTION		657		/* 657 intr per revolution */
 
 
 /* motor */
@@ -27,6 +27,8 @@
 #define PIN_DIR2_MOTOR_A		5
 #define PIN_DIR1_MOTOR_B		7
 #define PIN_DIR2_MOTOR_B		8
+
+#define MOTOR_MAX_RPM			107
 
 #define MOTOR_KP				10
 #define MOTOR_KI				1
@@ -51,7 +53,7 @@ enum Mode {
 	MODE_TEST_MOTOR_DIR,
 	MODE_TEST_MOTOR_PWM,
 	MODE_TEST_MOTOR_RPM,
-	MODE_TEST_MOTOR_RPM_SINGLE,
+	MODE_TEST_ENCODER,
 	MODE_TEST_MPU6050,
 	MODE_MAX,
 };
