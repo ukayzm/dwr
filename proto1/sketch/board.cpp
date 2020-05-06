@@ -17,9 +17,9 @@ Pid pid0 = Pid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
 Pid pid1 = Pid(MOTOR_KP, MOTOR_KI, MOTOR_KD);
 
 
-unsigned long prev_msec;
 unsigned long cur_msec;
 unsigned long cur_usec;
+unsigned long loop_timer;
 Mode mode;
 
 
@@ -43,18 +43,16 @@ void setup_board()
 	motor1.attachEncoder(&encoder1);
 	//motor0.attachPid(&pid1);
 
-	prev_msec = millis();
 	mode = 0;
+	cur_usec = micros();
 }
 
 void loop_board()
 {
-	cur_msec = millis();
+	/* wait until the starting the next loop */
+	while (micros() - cur_usec < LOOP_USEC);
 	cur_usec = micros();
-	if (cur_msec == prev_msec) {
-		return;
-	}
-	prev_msec = cur_msec;
+	cur_msec = millis();
 
 	loop_mpu6050_dmp6();
 	motor0.loop();

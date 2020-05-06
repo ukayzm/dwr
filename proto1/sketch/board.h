@@ -44,7 +44,7 @@
 
 
 /* loop interval (msec) */
-#define LOOP_USEC     1000
+#define LOOP_USEC     2000
 
 
 /* operation mode */
