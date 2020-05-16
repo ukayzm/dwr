@@ -2,7 +2,7 @@
 
 The simplest design - two differential wheels and a ball caster as the third wheel
 
-## Hardware 
+# Hardware 
 
 * 2 geared DC motors with encoder
 * 2 wheels, 84mm in diameter
@@ -13,15 +13,17 @@ The simplest design - two differential wheels and a ball caster as the third whe
 * HC-06 Bluetooth
 * Xiaomi Power Bank 10400mAh
 
-## Software
+# Software
 
-sketch/ - arduino source code
+* sketch/ - main source code
+* test_mpu6050_dmp/ - test MPU6050 in DMP mode, measure angles of yaw, pitch and roll, and measure the time to read data.
 
-required library:
+## Required Library
+
 * IRremove
 * I2Cdev, MPU6050 from https://github.com/jrowberg/i2cdevlib
 
-You can play with Arduino standard IDE. But I prefer to use linux terminal.
+You can use Arduino standard IDE to compile the source code and upload. But I prefer to use linux terminal.
 
 ```bash
 $ arduino-cli lib install IRremote
@@ -35,7 +37,7 @@ $ cp -r I2Cdev/ MPU6050/ ~/Arduino/libraries/
 
 ```bash
 $ cd dwr/proto1
-$ arduino-cli compile --fqbn arduino:avr:uno sketch/ && arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno sketch/
+$ arduino-cli compile --fqbn arduino:avr:uno -u -p /dev/ttyACM0 sketch/
 $ stty -F /dev/ttyACM0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
 $ cat /dev/ttyACM0
 ```
@@ -44,7 +46,7 @@ $ cat /dev/ttyACM0
 
 ```bash
 $ cd dwr/proto1
-$ arduino-cli compile --fqbn arduino:avr:uno sketch/ && arduino-cli upload -p /dev/ttyUSB0 --fqbn arduino:avr:uno sketch/
+$ arduino-cli compile --fqbn arduino:avr:uno -u -p /dev/ttyUSB0 sketch/
 $ stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
 $ cat /dev/ttyUSB0
 ```
@@ -52,7 +54,7 @@ $ cat /dev/ttyUSB0
 ### Arduino Nano clone
 ```bash
 $ cd dwr/proto1
-$ arduino-cli compile --fqbn arduino:avr:nano:cpu=atmega328old sketch/ && arduino-cli upload -p /dev/ttyUSB0 --fqbn arduino:avr:nano:cpu=atmega328old sketch/
+$ arduino-cli compile --fqbn arduino:avr:nano:cpu=atmega328old -u -p /dev/ttyUSB0 sketch/
 $ stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
 $ cat /dev/ttyUSB0
 ```
