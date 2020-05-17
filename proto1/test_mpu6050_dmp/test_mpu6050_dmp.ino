@@ -2,7 +2,7 @@
 
 void setup() {
 	Serial.begin(115200);
-    while (!Serial);
+	while (!Serial);
 	Serial.println(F("Test MPU6050 DMP6"));
 	setup_mpu6050_dmp6();
 }
