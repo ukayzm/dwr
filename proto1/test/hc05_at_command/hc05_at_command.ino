@@ -20,7 +20,7 @@ SoftwareSerial BTserial(A0, A1); // RX | TX
 const long baudRate = 38400;	// The baud rate in AT mode is always 38400.
 
 #define MAX_CHAR	128
-char buf[MAX_CHAR];
+char line_buf[MAX_CHAR];
 int buf_len = 0;
 
 void setup() 
@@ -28,7 +28,6 @@ void setup()
 	Serial.begin(115200);
 	Serial.print("Sketch:   ");   Serial.println(__FILE__);
 	Serial.print("Uploaded: ");   Serial.println(__DATE__);
-	Serial.println(" ");
 
 	BTserial.begin(baudRate);  
 	Serial.print("BTserial started at "); Serial.println(baudRate);
@@ -50,13 +49,13 @@ void loop()
 	if (Serial.available()) {
 		char c = Serial.read();
 		if (buf_len < MAX_CHAR) {
-			buf[buf_len++] = c;
+			line_buf[buf_len++] = c;
 		}
 		Serial.write(c);
 		if (buf_len == MAX_CHAR || c == '\n') {
 			unsigned long start_usec = micros();
 			for (int i = 0; i < buf_len; i++) {
-				BTserial.write(buf[i]);   
+				BTserial.write(line_buf[i]);   
 			}
 			unsigned long cur_usec = micros();
 			Serial.print(buf_len);
