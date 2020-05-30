@@ -44,14 +44,15 @@ $ printf "AT+ROLE\r\n" > /dev/ttyACM0
 $ printf "AT+ROLE=1\r\n" > /dev/ttyACM0
 ```
 
+Be aware of the trailing `\r\n`.
+
 ## Receiving response
 
 Open another terminal and monitor the response.
 ```bash
 $ cat /dev/ttyACM0
-SketchSketch:   /home/rostude/work/dwr/proto1/test_hc05_at_command/test_hc05_at_command.ino
+Sketch:   /home/rostude/work/dwr/proto1/test_hc05_at_command/test_hc05_at_command.ino
 Uploaded: May 18 2020
-
 BTserial started at 38400
 > AT
 4 chars sent in 1084 usec
@@ -71,11 +72,35 @@ OK
 
 ## Useful AT commands
 
-* AT
-* AT+ROLE
-* AT+UART
-* AT+UART=115200,0,0
+| AT command | description |
+| --- | --- |
+| AT | check the connection |
+| AT+ROLE | see role (0=slave, 1=master) (HC-05 only) |
+| AT+ROLE=0 | set role as slave (HC-05 only) |
+| AT+ROLE=1 | set role as master (HC-05 only) |
+| AT+UART | see baudrate (HC-05 only) |
+| AT+UART=115200,0,0 | set baudrate as 115200 (HC-05) |
+| AT+BAUD8 | set baudrate as 115200 (HC-06), see below |
+| AT+RESET | reset and exit AT mode |
+| AT+ADDR | see address |
+| AT+NAME | see name (HC-05 only) |
+| AT+NAME=asdf | set name as asdf (HC-05) |
+| AT+NAMEasdf | set name as asdf (HC-06) |
+| AT+PSWD | see password (HC-05 only) |
+| AT+PSWD=2987 | set password as 2987 (HC-05) |
+| AT+PIN2987 | set password as 2987 (HC-06) |
+| AT+RMAAD | clears any previously paired devices (HC-05) |
 
+
+Setting baudrate of HC-06 is different from HC-05. To change baud rate, type AT+BAUDX, where X=1 to 9.
+* 1 set to 1200bps
+* 2 set to 2400bps
+* 3 set to 4800bps
+* 4 set to 9600bps (Default)
+* 5 set to 19200bps
+* 6 set to 38400bps
+* 7 set to 57600bps
+* 8 set to 115200bps
 
 ## Change HC-05 back to data mode
 

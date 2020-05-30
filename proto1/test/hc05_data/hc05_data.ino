@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
 SoftwareSerial BTserial(A0, A1); // RX | TX
-const long baudRate = 9600;
+const long baudRate = 115200;
 
 #define MAX_CHAR	128
 char line_buf[MAX_CHAR];
