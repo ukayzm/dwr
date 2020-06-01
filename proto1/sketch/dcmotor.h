@@ -11,7 +11,7 @@
 class DcMotor : public Motor
 {
 public:
-	DcMotor(int _id, int pin_pwm, int pin_dirA, int pin_dirB, int16_t max_rpm);
+	DcMotor(int _id, int16_t max_rpm, int pin_pwm, int pin_dirA, int pin_dirB);
 	void setPwm(int16_t pwm);			/* PWM -255 ~ +255 */
 	int16_t getPwm(void);
 	void attachEncoder(Encoder *encoder);

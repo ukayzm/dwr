@@ -6,4 +6,6 @@ Before this, please make it sure that the baudrate of HC-05 is set as 115200 wit
 
 The best instruction is [here](https://www.collideabq.com/2016/04/28/bluetooth-serial-connection-with-windows-10/).
 
-The LED should blink twice every couple of seconds.
+Once the pairing is done, the LED should blink twice every couple of seconds.
+
+If HC-05 is power-cycled, the pairing should be done again.

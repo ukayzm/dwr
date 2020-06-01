@@ -59,7 +59,7 @@ $ stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -
 $ cat /dev/ttyUSB0
 ```
 
-# Provisioning Bluetooth
+# Provision Bluetooth
 
 The default baudrate of HC-05 bluetooth serial module is 9600. We will change it to 115200 to communicate faster.
 
