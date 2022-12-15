@@ -16,11 +16,12 @@ The simplest design - two differential wheels and a ball caster as the third whe
 # Software
 
 * sketch/ - main source code
-* test/ - test the hardware parts.
+* test/ - codes to test the hardware parts.
+* fritzing/ - fritzing files of the hardware
 
 ## Required Library
 
-* IRremove
+* IRremote
 * I2Cdev, MPU6050 from https://github.com/jrowberg/i2cdevlib
 
 You can use Arduino standard IDE to compile the source code and upload. But I prefer to use linux terminal.
