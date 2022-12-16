@@ -2,16 +2,21 @@
 
 The simplest design - two differential wheels and a ball caster as the third wheel
 
+Press the picture to see the video on YouTube.
+
+[![proto1](proto1.jpg)](https://youtu.be/fgpBi1nglc4)
+
 # Hardware 
 
 * 2 geared DC motors with encoder
 * 2 wheels, 84mm in diameter
 * L293N motor driver
-* Arduino nano
+* Arduino Uno
 * MPU6050
 * IR receiver
-* HC-06 Bluetooth
 * Xiaomi Power Bank 10400mAh
+
+![fritzing](fritzing/proto1_bb.png)
 
 # Software
 
@@ -59,26 +64,4 @@ $ arduino-cli compile --fqbn arduino:avr:nano:cpu=atmega328old -u -p /dev/ttyUSB
 $ stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
 $ cat /dev/ttyUSB0
 ```
-
-# Provision Bluetooth
-
-The default baudrate of HC-05 bluetooth serial module is 9600. We will change it to 115200 to communicate faster.
-
-1. Upload the code `dwr/test/hc05_at_command`.
-2. Remove the 5V connection to HC-05 VCC
-3. Press and hold the button switch on the HC-05 module
-4. Re-connect HC-05 VCC to 5V (while still pressing the button switch), the LED should come on.
-5. Release the button switch and the LED should be blinking slowly on/off once every couple of seconds. This indicates AT mode. 
-6. Do the following AT commands to provision HC-05
-
-```
-AT
-AT+ROLE=0
-AT+UART=115200,0,0
-```
-
-7. Power off and on HC-05 without pressing button. The LED should be blinking fast on/off.
-
-Refer to [test/hc05_at_command/README.md](test/hc05_at_command/README.md) for more information about AT command of HC-05.
-
 
