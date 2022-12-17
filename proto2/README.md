@@ -9,8 +9,5 @@ parts
 * Arduino nano
 * MPU6050
 * IR receiver
-* HC-06 Bluetooth
 * 3S LiPo battery
-* Voltage sensor
-* Red LED, Green LED
 
