@@ -1,6 +1,6 @@
 #include <IRremote.h>
-#include "board.h"
-#include "test.h"
+//#include "board.h"
+//#include "test.h"
 
 
 IRrecv irrecv(A3);	// A3 pin
