@@ -49,6 +49,10 @@ void setup()
   // Start reading the remote. PinInterrupt or PinChangeInterrupt* will automatically be selected
   if (!IRLremote.begin(pinIR))
     Serial.println(F("You did not choose a valid pin."));
+  else {
+    Serial.print(F("receiving IR signal from PIN "));
+	Serial.println(pinIR);
+  }
 }
 
 void loop()
@@ -61,6 +65,8 @@ void loop()
   // Check if new IR protocol data is available
   if (IRLremote.available())
   {
+	uint32_t ms = millis();
+
     // Light Led
     digitalWrite(pinLed, HIGH);
 
@@ -68,11 +74,11 @@ void loop()
     auto data = IRLremote.read();
 
     // Print the protocol data
-    Serial.print(F("Address: 0x"));
-    Serial.println(data.address, HEX);
-    Serial.print(F("Command: 0x"));
+	Serial.print((float)ms / 1000);
+    Serial.print(F(" Address: 0x"));
+    Serial.print(data.address, HEX);
+    Serial.print(F(", Command: 0x"));
     Serial.println(data.command, HEX);
-    Serial.println();
 
     // Turn Led off after printing the data
     digitalWrite(pinLed, LOW);
