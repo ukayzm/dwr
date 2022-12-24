@@ -7,7 +7,7 @@
  * You have to modify the IRremote library
  *  - add a call to timer_isr() at the end of IRTimer() in IRremote.cpp
  */
-#define SHARE_TIMER2_WITH_IRREMOTE
+//#define SHARE_TIMER2_WITH_IRREMOTE
 
 #if defined(SHARE_TIMER2_WITH_IRREMOTE)
 #define TIMER2_HZ	20000
@@ -22,9 +22,6 @@ extern void (*external_timer2_isr)();
 
 void setup_board()
 {
-	Serial.println("Power supply: 3S LiPo Battery");
-	Serial.println("Motor driver: a4988");
-
 #if defined(SHARE_TIMER2_WITH_IRREMOTE)
 	external_timer2_isr = timer_isr;
 #else
@@ -67,9 +64,6 @@ void setup_board()
 	pinMode(STEP1, OUTPUT);
 	pinMode(DIR1, OUTPUT);
 	pinMode(EN1, OUTPUT);
-
-	digitalWrite(EN0, HIGH);
-	digitalWrite(EN1, LOW);
 }
 
 /*
@@ -106,14 +100,21 @@ ISR(TIMER2_COMPA_vect)
  * 16: sixteenth step
  */
 #define MICROSTEP	16
-uint16_t rpm2maxcnt(uint16_t rpm)
+uint16_t rpm2maxcnt(int16_t rpm)
 {
-	float pps = rpm * MICROSTEP * (200.0 / 60.0);
+	uint16_t urpm = rpm;
+	if (rpm < 0) {
+		urpm = -rpm;
+	}
+	float pps = urpm * MICROSTEP * (200.0 / 60.0);
 	uint16_t maxcnt = (uint16_t)(TIMER2_HZ / pps);
 #if 1
 	Serial.print(rpm); Serial.print(" RPM");
 	Serial.print("\t= "); Serial.print(pps); Serial.print(" pulse per sec (Hz)");
-	Serial.print("\t= "); Serial.print(max_cnt); Serial.print(" timer tick between pulse");
+	Serial.print("\t= "); Serial.print(maxcnt); Serial.print(" timer tick between pulse");
+	if (maxcnt == 0) {
+		Serial.print("\nWARNING: maxcnt must be non 0.");
+	}
 	Serial.println();
 #endif
 	return maxcnt;
@@ -134,7 +135,7 @@ void motor_set_rpm(int16_t rpm)
 		digitalWrite(DIR1, HIGH);
 		digitalWrite(EN0, LOW);
 		digitalWrite(EN1, LOW);
-		max_cnt = rpm2maxcnt(-rpm);
+		max_cnt = rpm2maxcnt(rpm);
 	} else {
 		digitalWrite(DIR0, HIGH);
 		digitalWrite(DIR1, LOW);
