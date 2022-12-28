@@ -38,3 +38,9 @@
 cscope.files
 cscope.output
 tags
+
+# ESP-IDF
+build/
+dependencies.lock
+managed_components/
+sdkconfig

@@ -42,5 +42,5 @@ The built-in LED turns on and off and test strings and results are printed out t
 
 It shows the delay of serial print, which is different from Arduino. It is not proportional to the number of characters. The delay suddenly goes up from microseconds to milliseconds when the number of characters is bigger than 90. But the print of 100 characters takes only 27 usec, which is weird. I guess that it's due to the buffer mechanism for serial output, which I don't know exactly.
 
-But one thing is clear - I can print out 80 characters with delay of only a few tens of milliseconds, but only when I print it not repeatedly. 
+But one thing is clear - I can print out 80 characters with delay of only a few tens of microseconds, but only when I print it not repeatedly. 
 
