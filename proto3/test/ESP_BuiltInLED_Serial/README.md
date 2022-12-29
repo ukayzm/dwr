@@ -1,4 +1,4 @@
-# Test LED blinking and measure the delay of the Serial.print().
+# Test LED blinking and measure the delay of the printf().
 
 The built-in LED turns on and off and test strings and results are printed out through serial port every 1 second repeatedly.
 
@@ -8,12 +8,23 @@ The code was mainly taken from https://github.com/espressif/esp-idf/tree/master/
 
 ## Build and Run
 
-Change `COM4` according to your environment.
+Change `COM4` or `/dev/cu.usbserial-1130` according to your environment.
+
+Windows: open ESP-IDF shell (CMD or PowerShell), change to the source directory, and then:
 
 ```
 idf.py set-target esp32
 idf.py build
 idf.py -p COM4 flash monitor
+```
+
+MacOS: open a shell, change to the source directory, and then:
+
+```
+source ~/esp/esp-idf/export.sh
+idf.py set-target esp32
+idf.py build
+idf.py -p /dev/cu.usbserial-1130 flash monitor
 ```
 
 ## Result

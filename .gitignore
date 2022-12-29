@@ -44,3 +44,5 @@ build/
 dependencies.lock
 managed_components/
 sdkconfig
+.cache/
+.DS_Store
