@@ -134,17 +134,6 @@ static esp_hid_scan_result_t *find_scan_result(esp_bd_addr_t bda, esp_hid_scan_r
     }
     return NULL;
 }
-
-static int get_num_scan_result(esp_hid_scan_result_t *results)
-{
-    esp_hid_scan_result_t *r = results;
-	int n = 0;
-    while (r) {
-		n++;
-        r = r->next;
-    }
-    return n;
-}
 #endif /* (CONFIG_BT_HID_HOST_ENABLED || CONFIG_BT_BLE_ENABLED) */
 
 #if CONFIG_BT_HID_HOST_ENABLED

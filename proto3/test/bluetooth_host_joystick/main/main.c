@@ -1,9 +1,3 @@
-/*
- * SPDX-FileCopyrightText: 2021 Espressif Systems (Shanghai) CO LTD
- *
- * SPDX-License-Identifier: Unlicense OR CC0-1.0
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +9,7 @@
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
+#include "led_state.h"
 #include "nvs_flash.h"
 #include "esp_bt.h"
 #include "esp_bt_defs.h"
@@ -29,7 +24,7 @@
 
 #include "esp_timer.h"
 
-static const char *TAG = "ESP_HIDH_DEMO";
+static const char *TAG = "MAIN";
 
 void hidh_callback(void *handler_args, esp_event_base_t base, int32_t id, void *event_data)
 {
@@ -40,6 +35,7 @@ void hidh_callback(void *handler_args, esp_event_base_t base, int32_t id, void *
     case ESP_HIDH_OPEN_EVENT: {
         if (param->open.status == ESP_OK) {
             const uint8_t *bda = esp_hidh_dev_bda_get(param->open.dev);
+			set_pairing_led_state(PAIRING_STATE_CONNECTED);
             ESP_LOGI(TAG, ESP_BD_ADDR_STR " OPEN: %s", ESP_BD_ADDR_HEX(bda), esp_hidh_dev_name_get(param->open.dev));
             esp_hidh_dev_dump(param->open.dev, stdout);
         } else {
@@ -94,8 +90,12 @@ void hid_demo_task(void *pvParameters)
 {
     size_t results_len = 0;
     esp_hid_scan_result_t *results = NULL;
+
+	setup_led_state();
+
     ESP_LOGI(TAG, "SCAN...");
     //start scan for HID devices
+	set_pairing_led_state(PAIRING_STATE_SCANNING);
 	while (1) {
 		results_len = 0;
     	esp_hid_scan(SCAN_DURATION_SECONDS, &results_len, &results);
@@ -134,6 +134,7 @@ void hid_demo_task(void *pvParameters)
         }
         if (cr) {
             //open the last result
+			set_pairing_led_state(PAIRING_STATE_CONNECTING);
             esp_hidh_dev_open(cr->bda, cr->transport, cr->ble.addr_type);
         }
         //free the results
