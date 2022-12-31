@@ -39,6 +39,8 @@ cscope.files
 cscope.output
 tags
 
+.idea/
+
 # ESP-IDF
 build/
 dependencies.lock
