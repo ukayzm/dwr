@@ -1,5 +1,5 @@
 set(srcs "main.cpp"
-         "mpu6050_kalman.cpp"
+         "mpu6050_filter.cpp"
 )
 set(include_dirs "."
                  "../components/I2Cdev"
