@@ -6,6 +6,8 @@
 
 static void lcd1602_task(void* arg)
 {
+	vTaskDelay(100 / portTICK_PERIOD_MS);
+
     lcd1602_i2c_init();
 	i2c_scan();
 	lcd1602_Init();

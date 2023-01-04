@@ -11,7 +11,7 @@
 #define ACK_VAL                            0x0              /*!< I2C ack value */
 #define NACK_VAL                           0x1              /*!< I2C nack value */
 
-#define LCD1602_I2C_ADDR (0x3F)//(0x27 << 1)
+//#define LCD1602_I2C_ADDR (0x3F)//(0x27 << 1)
 
 #define LCD1602_GPIO_SDA	21
 #define LCD1602_GPIO_SCL	22
@@ -29,3 +29,5 @@ void lcd1602_SendString(char *str);
 void lcd1602_Init(void);
 void i2c_scan(void);
 void lcd1602_i2c_init(void);
+
+extern uint8_t lcd1602_addr;
