@@ -15,7 +15,7 @@
 #include "freertos/queue.h"
 #include "driver/gpio.h"
 #include "gpio.h"
-#include "ir_receive.h".h"
+#include "ir_receive.h"
 
 void app_main(void)
 {
